@@ -1,7 +1,9 @@
 def midcol(a,b,r):
     return (int(a[0]+(b[0]-a[0])*r),int(a[1]+(b[1]-a[1])*r),int(a[2]+(b[2]-a[2])*r))
 
-def ColorScheme(start=(0,0,0),middle=[],end=(255,255,255)):
+def ColorScheme(start=(0,0,0),middle=[],end=(255,255,255)):  
+#Create a linear interpolation gradient from a start color and end color, with any number of optional additional colors in between.
+#Middle colors are formated as (startpos, (Redval,Greenval,Blueval))
     def ColFunc(pos):#0<pos<1
         if pos<0:
             return start
@@ -25,14 +27,16 @@ def ColorScheme(start=(0,0,0),middle=[],end=(255,255,255)):
                 return midcol(start,end,pos)
     return ColFunc
 
-def draw_sample_gradient(name,ColFunc):
+def draw_sample_gradient(name,ColFunc,Resolution=(640,480)):
     from PIL import Image,ImageDraw
-    im=Image.new("RGB",(640,480),(0,0,0))
+    im=Image.new("RGB",Resolution,(0,0,0))
     dr=ImageDraw.Draw(im)
-    for i in range(640):
-        dr.rectangle((i,0,i+1,480),fill=ColFunc(i/640))
+    for i in range(Resolution[0]):
+        dr.rectangle((i,0,i+1,Resolution[1]),fill=ColFunc(i/Resolution[0]))
     im.save(name+".png")
     
+
+###These are all sample color schemes, feel free to remove them if you don't want them being declared every time you import
 ColTest1=ColorScheme(start=(64,100,196),middle=[(.2,(255,196,196)),(.22,(64,32,164)),(.23,(255,255,255)),(.25,(0,0,0)),(.3,(100,100,64)),(.35,(0,0,0)),(.4,(64,32,164)),(.55,(255,255,255)),(.75,(0,0,0)),(.9,(32,132,96))],end=(164,64,196))
 ColTest2=ColorScheme(start=(196,32,32),middle=[(.2,(0,0,0)),(.4,(64,32,164)),(.8,(255,255,255)),(.95,(0,0,0)),(.98,(128,180,200))],end=(164,64,196))
 ColTest3=ColorScheme(start=(32,196,32),middle=[(.2,(255,0,0)),(.22,(64,32,164)),(.23,(255,255,255)),(.25,(0,0,0)),(.3,(255,255,0)),(.42,(64,164,32)),(.43,(255,255,255)),(.45,(0,0,0)),(.6,(64,0,196))],end=(255,255,255))
@@ -43,10 +47,9 @@ Blurple=ColorScheme(start=(0,0,0),middle=[(.3,(64,0,64)),(.4,(96,0,64)),(.5,(0,0
 BlurplePlus=ColorScheme(start=(0,0,0),middle=[(.2,(64,0,64)),(.3,(96,0,96)),(.35,(206,128,196)),(.4,(64,0,96)),(.48,(0,0,0)),(.55,(0,0,128)),(.65,(20,80,128)),(.7,(100,200,200)),(.72,(20,80,128)),(.8,(20,100,120))],end=(0,0,0))
 Boundary=ColorScheme(start=(40,64,96),middle=[(.2,(100,120,164)),(.3,(100,120,96)),(.3,(96,0,96)),(.35,(206,128,196)),(.4,(64,0,96)),(.48,(0,0,0)),(.65,(0,0,128)),(.65,(20,80,128)),(.7,(100,200,200)),(.7,(20,80,128)),(.8,(20,100,120))],end=(0,0,0))
 
+###Demos of exporting the colorscheme for preview, by default it's exports as a 640x480 png, although there's no alpha values so maybe it should be jpg
 draw_sample_gradient("ElectricBlue",ElectricBlue)
 draw_sample_gradient("Fire",Fire)
 draw_sample_gradient("Blurple",Blurple)
 draw_sample_gradient("BlurplePlus",BlurplePlus)
 draw_sample_gradient("Boundary",Boundary)
-#draw_sample_gradient("GreyPrimarys",ColTest2)
-#draw_sample_gradient("Pastel",ColTest3)
